@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频预览</title>
+    <style>
+        body { margin: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+        video { max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        #error { color: white; text-align: center; display: none; }
+    </style>
+</head>
+<body>
+    <video id="mainVideo" controls autoplay playsinline></video>
+    <div id="error">视频文件未找到，请检查链接。</div>
+
+    <script>
+        // 获取 URL 参数中的 v 值
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoFile = urlParams.get('v');
+        const videoElement = document.getElementById('mainVideo');
+
+        if (videoFile) {
+            // 自动加载对应的视频文件
+            videoElement.src = videoFile;
+        } else {
+            document.getElementById('error').style.display = 'block';
+            videoElement.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
