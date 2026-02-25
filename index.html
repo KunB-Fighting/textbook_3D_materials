@@ -15,14 +15,18 @@
     <div id="error">视频文件未找到，请检查链接。</div>
 
     <script>
-        // 获取 URL 参数中的 v 值
         const urlParams = new URLSearchParams(window.location.search);
         const videoFile = urlParams.get('v');
         const videoElement = document.getElementById('mainVideo');
 
         if (videoFile) {
-            // 自动加载对应的视频文件
-            videoElement.src = videoFile;
+            // 使用绝对路径确保浏览器能准确定位文件
+            // 请确保这里的仓库名和你的 GitHub 路径完全一致
+            const repoPath = "/textbook_3D_materials/";
+            videoElement.src = window.location.origin + repoPath + videoFile;
+            
+            // 显式调用 load，强制浏览器重新解析视频源
+            videoElement.load(); 
         } else {
             document.getElementById('error').style.display = 'block';
             videoElement.style.display = 'none';
