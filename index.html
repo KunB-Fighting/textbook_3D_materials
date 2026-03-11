@@ -5,33 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>视频预览</title>
     <style>
-        body { margin: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
-        video { max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        #error { color: white; text-align: center; display: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: sans-serif;
+            color: #fff;
+            padding: 16px;
+        }
+        video {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.7);
+        }
+        #title {
+            margin-bottom: 14px;
+            font-size: 15px;
+            color: #aaa;
+            word-break: break-all;
+            text-align: center;
+        }
+        #error {
+            display: none;
+            text-align: center;
+            padding: 32px;
+        }
+        #error h2 { font-size: 20px; margin-bottom: 10px; color: #f55; }
+        #error p  { font-size: 14px; color: #aaa; }
     </style>
 </head>
 <body>
-    <video id="mainVideo" controls autoplay playsinline></video>
-    <div id="error">视频文件未找到，请检查链接。</div>
+
+    <div id="title"></div>
+    <video id="mainVideo" controls playsinline></video>
+
+    <div id="error">
+        <h2>⚠️ 视频未找到</h2>
+        <p id="errorMsg">请检查 URL 参数 <code>?v=文件名.mp4</code> 是否正确。</p>
+    </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoFile = urlParams.get('v');
-        const videoElement = document.getElementById('mainVideo');
+        const BASE = "https://raw.githubusercontent.com/KunB-Fighting/textbook_3D_materials/main/";
 
-        if (videoFile) {
-            // 使用绝对路径确保浏览器能准确定位文件
-            // 请确保这里的仓库名和你的 GitHub 路径完全一致
-            // const repoPath = "/textbook_3D_materials/";
-            // videoElement.src = window.location.origin + repoPath + videoFile;
-            const repoPath = "https://raw.githubusercontent.com/KunB-Fighting/textbook_3D_materials/main/";
-            videoElement.src = repoPath + videoFile;
-            
-            // 显式调用 load，强制浏览器重新解析视频源
-            videoElement.load(); 
+        const params    = new URLSearchParams(window.location.search);
+        const videoFile = params.get("v");
+        const video     = document.getElementById("mainVideo");
+        const errorBox  = document.getElementById("error");
+        const errorMsg  = document.getElementById("errorMsg");
+        const titleEl   = document.getElementById("title");
+
+        if (!videoFile) {
+            video.style.display = "none";
+            errorMsg.textContent = "URL 中缺少参数，用法：player.html?v=文件名.mp4";
+            errorBox.style.display = "block";
         } else {
-            document.getElementById('error').style.display = 'block';
-            videoElement.style.display = 'none';
+            const src = BASE + encodeURIComponent(videoFile);
+            titleEl.textContent = videoFile;
+            video.src = src;
+            video.load();
+
+            video.onerror = () => {
+                video.style.display = "none";
+                errorMsg.innerHTML = `无法加载：<br><code>${src}</code><br><br>请确认文件名拼写正确，且仓库为 Public。`;
+                errorBox.style.display = "block";
+            };
         }
     </script>
 </body>
