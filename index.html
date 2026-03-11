@@ -22,8 +22,10 @@
         if (videoFile) {
             // 使用绝对路径确保浏览器能准确定位文件
             // 请确保这里的仓库名和你的 GitHub 路径完全一致
-            const repoPath = "/textbook_3D_materials/";
-            videoElement.src = window.location.origin + repoPath + videoFile;
+            // const repoPath = "/textbook_3D_materials/";
+            // videoElement.src = window.location.origin + repoPath + videoFile;
+            const repoPath = "https://raw.githubusercontent.com/你的用户名/textbook_3D_materials/main/";
+            videoElement.src = repoPath + videoFile;
             
             // 显式调用 load，强制浏览器重新解析视频源
             videoElement.load(); 
